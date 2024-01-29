@@ -92,6 +92,7 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
+	//TODO Implement
 	@Disabled // Not yet implemented
 	@Test
 	public void getNearbyAttractions() {

@@ -74,6 +74,10 @@ public class User {
 			userRewards.add(userReward);
 		}
 	}
+
+	public void setUserRewards(List<UserReward> userRewards) {
+		this.userRewards = userRewards;
+	}
 	
 	public List<UserReward> getUserRewards() {
 		return userRewards;
