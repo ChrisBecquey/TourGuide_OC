@@ -45,6 +45,7 @@ public class TestPerformance {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
+	//Les deux tests passent avec cette configuration, a voir pour l'augmentation des perfs
 	@Disabled
 	@Test
 	public void highVolumeTrackLocation() {

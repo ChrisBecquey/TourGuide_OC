@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -29,6 +30,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
+import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
@@ -36,6 +38,8 @@ import tripPricer.TripPricer;
 public class TourGuideService {
     private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
     private final GpsUtil gpsUtil;
+
+    @Autowired
     private final RewardsService rewardsService;
     private final TripPricer tripPricer = new TripPricer();
     public final Tracker tracker;
@@ -102,21 +106,43 @@ public class TourGuideService {
 
         // Trier en fonction de la distance entre chaque attraction et la dernière localisation de l'user
         allAttractions.sort(Comparator.comparingDouble(attraction -> rewardsService.getDistance(attraction, visitedLocation.location)));
-
+        // Retourner uniquement les 5 attractions les plus proches.
         return allAttractions.stream().limit(5).toList();
     }
 
-    /*	Méthode d'origine, a supprimer à la fin du projet
-    public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-            List<Attraction> nearbyAttractions = new ArrayList<>();
-            for (Attraction attraction : gpsUtil.getAttractions()) {
-                if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-                    nearbyAttractions.add(attraction);
-                }
-            }
+    public List<AttractionInfo> getInfoForNearbyAttractions(VisitedLocation visitedLocation, User user) {
+        List<Attraction> nearbyAttractions = getNearByAttractions(visitedLocation);
 
-            return nearbyAttractions;
-        }*/
+        return  nearbyAttractions.stream()
+                .map(attraction -> {
+                    double distance = rewardsService.getDistance(attraction, visitedLocation.location);
+                    int rewardPoints = rewardsService.getRewardPoints(attraction, user);
+                    return new AttractionInfo(
+                            attraction.attractionName,
+                            attraction.latitude,
+                            attraction.longitude,
+                            visitedLocation.location.latitude,
+                            visitedLocation.location.longitude,
+                            distance,
+                            rewardPoints
+                    );
+                })
+                .toList();
+
+    }
+
+    // Méthode d'origine, a supprimer à la fin du projet
+//    public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+//        List<Attraction> nearbyAttractions = new ArrayList<>();
+//        for (Attraction attraction : gpsUtil.getAttractions()) {
+//            if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
+//                nearbyAttractions.add(attraction);
+//            }
+//        }
+//
+//        return nearbyAttractions;
+//    }
+
     private void addShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
