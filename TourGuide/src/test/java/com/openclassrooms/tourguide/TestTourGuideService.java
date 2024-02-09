@@ -2,16 +2,20 @@ package com.openclassrooms.tourguide;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.openclassrooms.tourguide.dto.AttractionInfo;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import org.mockito.Mock;
 import rewardCentral.RewardCentral;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.service.RewardsService;
@@ -20,6 +24,8 @@ import com.openclassrooms.tourguide.user.User;
 import tripPricer.Provider;
 
 public class TestTourGuideService {
+	@Mock
+	TourGuideService tourGuideService;
 
 	@Test
 	public void getUserLocation() {
@@ -92,7 +98,6 @@ public class TestTourGuideService {
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
-	//@Disabled // Not yet implemented
 	@Test
 	public void getNearbyAttractions() {
 		GpsUtil gpsUtil = new GpsUtil();
