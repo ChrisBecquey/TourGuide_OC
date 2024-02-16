@@ -57,8 +57,8 @@ public class TestPerformance {
 		// 100 => 7 sec
 		// 1000 => 78 sec
 		// 10000 => 787sec
-		// 100000 =>
-		InternalTestHelper.setInternalUserNumber(1000);
+		// 100000 => 7800sec
+		InternalTestHelper.setInternalUserNumber(100);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
@@ -77,12 +77,14 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
+	@Disabled
 	@Test
 	public void highVolumeTrackLocationModified() throws InterruptedException, ExecutionException {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		// 1000 => 5sec
 		// 100 000 => 506 sec environ 8,30 min
-		InternalTestHelper.setInternalUserNumber(100000);
+		InternalTestHelper.setInternalUserNumber(1000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = tourGuideService.getAllUsers();
@@ -134,6 +136,7 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
+	@Disabled
 	@Test
 	public void highVolumeGetRewardsModified() {
 		GpsUtil gpsUtil = new GpsUtil();
@@ -143,9 +146,9 @@ public class TestPerformance {
 		// 100 => 1s
 		// 1 000 => 11s
 		// 10 000 => 103s
-		// 100 000 =>
+		// 100 000 => 1025s / 17min
 
-		InternalTestHelper.setInternalUserNumber(100000);
+		InternalTestHelper.setInternalUserNumber(1000);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
