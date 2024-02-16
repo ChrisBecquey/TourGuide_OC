@@ -1,0 +1,37 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: dependencies install
+        run: |
+          mvn install:install-file -Dfile=./libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
+          mvn install:install-file -Dfile=./libs/RewardCentral.jar -DgroupId=RewardCentral -DartifactId=RewardCentral -Dversion=1.0.0 -Dpackaging=jar
+          mvn install:install-file -Dfile=./libs/TripPricer.jar -DgroupId=TripPricer -DartifactId=TripPricer -Dversion=1.0.0 -Dpackaging=jar
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Upload artifacts
+        uses: actions/artifact@v2
+        with:
+          name: my-artifacts
+          path: target
+
