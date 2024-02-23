@@ -90,27 +90,20 @@ public class TourGuideService {
         return providers;
     }
 
-    //methode à optimiser
-//    public VisitedLocation trackUserLocation(User user) {
-//        VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-//        user.addToVisitedLocations(visitedLocation);
-//        rewardsService.calculateRewards(user);
-//        return visitedLocation;
-//    }
-
     public VisitedLocation trackUserLocation(User user) {
         CompletableFuture<VisitedLocation> getLocationFuture = CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()));
         getLocationFuture.thenAccept(user::addToVisitedLocations);
 
         CompletableFuture<Void> calculateRewardsFuture = getLocationFuture.thenAcceptAsync(visitedLocation -> {
             rewardsService.calculateRewards(user);
-                });
+        });
 
         CompletableFuture<Void> combinedFuture = calculateRewardsFuture.thenCombine(getLocationFuture, (voidResult, visitedLocation) -> voidResult);
         combinedFuture.join();
 
         return getLocationFuture.join();
     }
+
     public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
         List<Attraction> allAttractions = gpsUtil.getAttractions();
 

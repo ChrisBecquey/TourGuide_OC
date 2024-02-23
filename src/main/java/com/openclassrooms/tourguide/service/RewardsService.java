@@ -72,16 +72,16 @@ public class RewardsService {
 
         // TODO passez en stream pour cohérence avec le projet
         // Soumet des taches à chaque utilisateur !
-        for(User user : users) {
+        for (User user : users) {
             executorService.submit(() -> {
                 calculateRewards(user);
                 countDownLatch.countDown(); // on descent de countdown
             });
         }
 
-        try{
+        try {
             countDownLatch.await();
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
