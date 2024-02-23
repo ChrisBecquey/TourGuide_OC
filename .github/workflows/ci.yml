@@ -20,11 +20,17 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: dependencies install
+      - name: Install local dependencies
         run: |
-          mvn install:install-file -Dfile=./libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
-          mvn install:install-file -Dfile=./libs/RewardCentral.jar -DgroupId=RewardCentral -DartifactId=RewardCentral -Dversion=1.0.0 -Dpackaging=jar
-          mvn install:install-file -Dfile=./libs/TripPricer.jar -DgroupId=TripPricer -DartifactId=TripPricer -Dversion=1.0.0 -Dpackaging=jar
+          mvn install:install-file "-Dfile=libs/gpsUtil.jar" "-DgroupId=gpsUtil" "-DartifactId=gpsUtil" "-Dversion=1.0.0" "-Dpackaging=jar"
+          mvn install:install-file "-Dfile=libs/RewardCentral.jar" "-DgroupId=rewardCentral" "-DartifactId=rewardCentral" "-Dversion=1.0.0" "-Dpackaging=jar"
+          mvn install:install-file "-Dfile=libs/TripPricer.jar" "-DgroupId=tripPricer" "-DartifactId=tripPricer" "-Dversion=1.0.0" "-Dpackaging=jar"
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifacts
+          path: target/
