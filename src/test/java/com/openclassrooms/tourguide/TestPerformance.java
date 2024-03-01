@@ -47,18 +47,13 @@ public class TestPerformance {
      * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
      */
 
-    //Les deux tests passent avec cette configuration, a voir pour l'augmentation des perfs
     @Disabled
     @Test
     public void highVolumeTrackLocation() {
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-        // Users should be incremented up to 100,000, and test finishes within 15 minutes
-        // 100 => 7 sec
-        // 1000 => 78 sec
-        // 10000 => 787sec
-        // 100000 => 7800sec
-        InternalTestHelper.setInternalUserNumber(100);
+
+        InternalTestHelper.setInternalUserNumber(1000);
         TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
         List<User> allUsers = new ArrayList<>();
@@ -82,8 +77,6 @@ public class TestPerformance {
     public void highVolumeTrackLocationModified() throws InterruptedException, ExecutionException {
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-        // 1000 => 5sec
-        // 100 000 => 506 sec environ 8,30 min
         InternalTestHelper.setInternalUserNumber(1000);
         TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
@@ -108,10 +101,6 @@ public class TestPerformance {
     public void highVolumeGetRewards() {
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-
-        // Users should be incremented up to 100,000, and test finishes within 20 minutes
-        // 100 => 54s
-        // 1000 => 506s
 
         InternalTestHelper.setInternalUserNumber(100);
         StopWatch stopWatch = new StopWatch();
@@ -141,12 +130,6 @@ public class TestPerformance {
     public void highVolumeGetRewardsModified() {
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-
-        // Users should be incremented up to 100,000, and test finishes within 20 minutes
-        // 100 => 1s
-        // 1 000 => 11s
-        // 10 000 => 103s
-        // 100 000 => 1025s / 17min
 
         InternalTestHelper.setInternalUserNumber(1000);
         StopWatch stopWatch = new StopWatch();

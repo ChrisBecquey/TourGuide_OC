@@ -70,14 +70,11 @@ public class RewardsService {
         // countDown avec un nombre = aux nombre d'utilisateurs
         CountDownLatch countDownLatch = new CountDownLatch(users.size());
 
-        // TODO passez en stream pour cohérence avec le projet
-        // Soumet des taches à chaque utilisateur !
-        for (User user : users) {
-            executorService.submit(() -> {
-                calculateRewards(user);
-                countDownLatch.countDown(); // on descent de countdown
-            });
-        }
+        users.forEach(user ->
+                executorService.submit(() -> {
+                    calculateRewards(user);
+                    countDownLatch.countDown(); // on descent de countdown
+                }));
 
         try {
             countDownLatch.await();
